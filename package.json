@@ -1,0 +1,37 @@
+{
+  "name": "todo-backend",
+  "version": "1.0.0",
+  "description": "Basic ToDo App backend",
+  "main": "index.js",
+  "scripts": {
+    "test": "test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/gdsbrooks/todo-backend.git"
+  },
+  "keywords": [
+    "ToDo",
+    "Hapi",
+    "SQLite3",
+    "Node",
+    "elecctro"
+  ],
+  "author": "George Brooks",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/gdsbrooks/todo-backend/issues"
+  },
+  "homepage": "https://github.com/gdsbrooks/todo-backend#readme",
+  "dependencies": {
+    "@hapi/eslint-plugin": "^5.1.0",
+    "@hapi/hapi": "^20.2.2",
+    "@hapi/inert": "^6.0.5",
+    "@hapi/vision": "^6.1.0",
+    "dotenv": "^16.0.0",
+    "hapi-swagger": "^14.3.0",
+    "joi": "^17.6.0",
+    "knex": "^2.0.0",
+    "sqlite3": "^5.0.6"
+  }
+}
