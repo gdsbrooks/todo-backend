@@ -4,7 +4,8 @@
   "description": "Basic ToDo App backend",
   "main": "index.js",
   "scripts": {
-    "test": "test"
+    "test": "test",
+    "dev": "nodemon"
   },
   "repository": {
     "type": "git",
