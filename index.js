@@ -1,8 +1,8 @@
-const { server } = require('@hapi/hapi');
 const Hapi = require('@hapi/hapi')
 const Inert = require('@hapi/inert');
 const Vision = require('@hapi/vision');
 const HapiSwagger = require('hapi-swagger');
+const Joi = require('joi')
 const Routes = require('./routes');
 
 const init = async () => {
@@ -15,7 +15,7 @@ const init = async () => {
     const swaggerOptions = {
         info: {
                 title: 'Todo App API Documentation - George Brooks',
-                version: '0.0.1',
+                version: '0.1',
             },
         };
 
@@ -27,6 +27,7 @@ const init = async () => {
             options: swaggerOptions
         }
     ]);
+    
     server.route(Routes);
 
     await server.start();

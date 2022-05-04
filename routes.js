@@ -1,4 +1,5 @@
-
+const { allow } = require('joi');
+const Joi = require('joi')
 const Routes =
     [
         {
@@ -8,28 +9,46 @@ const Routes =
                 description: 'Get Todos',
                 notes: 'Retrieves all todos. Optionally filters by state (All/Complete/Incomplete) and orders by description / created_at / completed_at',
                 tags: ['api'],
+                validate: {
+                    query: Joi.object({
+                        filter: Joi.string()
+                            .only().allow('all', 'complete', 'incomplete')
+                            .description('optional filter by status - all [default], complete, incomplete. '),
+                        orderBy: Joi.string()
+                            .optional()
+                            .only().allow('createdAt', 'completedAt', 'description' )
+                            .description('optional sort criteria - createdAt [default], completedAt or description.')
+                    }),
+
+                },
                 handler: (request, h) => {
 
-                    const filter = request.query.filter
-                    const orderBy = request.query.orderBy
+                    const filter = request.query.filter || 'all';
+                    const orderBy = request.query.orderBy || 'createdAt';
 
-                    //  GET /todos?filter=<STATE>&orderBy=<FIELD></FIELD>
+                    return `These are where all the todos go. <br> filter: ${filter}, order: ${orderBy}`
                 }
             }
         },
         {
             method: 'POST',
             path: '/todos',
+
             options: {
                 description: 'Post New Todo',
                 notes: 'adds a new todo with the description entered. Todo is stored with and id, created_at date, completed_at data(null) and state(incomplete)',
                 tags: ['api'],
+                validate: {
+                    payload: Joi.object({
+                        description: Joi.string()
+                            .required()
+                            .description('the description of  the new todo item')
+                    }),
+
+                },
                 handler: (request, h) => {
-
                     const newTodo = request.payload
-
-
-                }
+                },
             }
         },
         {
@@ -39,6 +58,17 @@ const Routes =
                 description: 'Update Todo',
                 notes: 'Can modify state to complete or update the description. If todo state is complete, it will reject with HTTP erro code 400',
                 tags: ['api'],
+                validate: {
+                    params: Joi.object({
+                        id: Joi.number()
+                            .required()
+                            .description('the id for the todo item to modify')
+                    }),
+                    payload: Joi.object({
+                        state: Joi.boolean(),
+                        description: Joi.string()
+                    })
+                },
                 handler: (request, h) => {
 
                     const patchTodo = request.params.id
@@ -53,6 +83,13 @@ const Routes =
                 description: 'Delete Todo',
                 notes: 'Removes specificed Todo from database',
                 tags: ['api'],
+                validate: {
+                    params: Joi.object({
+                        id: Joi.number()
+                            .required()
+                            .description('the id for the todo item to delete')
+                    }),
+                },
                 handler: (request, h) => {
 
                     const deleteTodo = request.params.id
