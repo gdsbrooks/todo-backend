@@ -12,6 +12,21 @@ const init = async () => {
         host: 'localhost'
     });
 
+    const swaggerOptions = {
+        info: {
+                title: 'Todo App API Documentation - George Brooks',
+                version: '0.0.1',
+            },
+        };
+
+    await server.register([
+        Inert,
+        Vision,
+        {
+            plugin: HapiSwagger,
+            options: swaggerOptions
+        }
+    ]);
     server.route(Routes);
 
     await server.start();
