@@ -1,7 +1,9 @@
 const Joi = require('joi')
-const { customAlphabet } = require('nanoid/non-secure')
 
-const nanoid = customAlphabet('1234567890abcdef', 10)
+const connection = require('./db/knexfile')[process.env.DB_CONNECTION || 'development'];
+const database = require('knex')(connection)
+
+
 
 const Routes =
     [
@@ -26,11 +28,10 @@ const Routes =
                 },
                 handler: (request, h) => {
 
-                    //default values for filter and orderBy if not specified.
                     const filter = request.query.filter || 'all';
                     const orderBy = request.query.orderBy || 'createdAt';
 
-                    return `These are where all the todos go. <br> filter: ${filter}, order: ${orderBy}`
+                    return database('todos')
                 }
             }
         },
@@ -52,14 +53,8 @@ const Routes =
                 handler: (request, h) => {
                     const todoDescription = request.payload
 
-                    const newTodo = {
-                        id: nanoid(),
-                        description: todoDescription.description,
-                        createdAt: new Date().toISOString(),
-                        state: false,
-                        completedAt: null
-                    }
-                    return newTodo
+            
+                    return database('todos').insert(todoDescription, ['id', 'description', 'createdAt'])
                 }
             }
             // Schema for full response object
@@ -83,12 +78,11 @@ const Routes =
             path: '/todo/{id}',
             options: {
                 description: 'Update Todo',
-                notes: 'Can modify state to complete or update the description. If todo state is complete, it will reject with HTTP erro code 400',
+                notes: 'Can modify state to complete or update the description. If todo state is complete, it will reject with HTTP error code 400',
                 tags: ['api'],
                 validate: {
                     params: Joi.object({
-                        id: Joi.string()
-                            .length(10)
+                        id: Joi.number()
                             .required()
                             .description('the id for the todo item to modify')
                     }),
@@ -116,9 +110,8 @@ const Routes =
                 tags: ['api'],
                 validate: {
                     params: Joi.object({
-                        id: Joi.string()
+                        id: Joi.number()
                             .required()
-                            .length(10)
                             .description('the id for the todo item to delete')
                     }),
                 },

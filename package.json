@@ -5,7 +5,9 @@
   "main": "index.js",
   "scripts": {
     "test": "test",
-    "dev": "nodemon"
+    "dev": "nodemon",
+    "seed": "./bin/seed.js"
+  
   },
   "repository": {
     "type": "git",
@@ -14,6 +16,8 @@
   "keywords": [
     "ToDo",
     "Hapi",
+    "Knex",
+    "Joi",
     "SQLite3",
     "Node",
     "elecctro"
@@ -29,11 +33,11 @@
     "@hapi/hapi": "^20.2.2",
     "@hapi/inert": "^6.0.5",
     "@hapi/vision": "^6.1.0",
+    "better-sqlite3": "^7.5.1",
     "dotenv": "^16.0.0",
     "hapi-swagger": "^14.3.0",
     "joi": "^17.6.0",
     "knex": "^2.0.0",
-    "nanoid": "^3.3.4",
-    "sqlite3": "^5.0.6"
+    "nanoid": "^3.3.4"
   }
 }

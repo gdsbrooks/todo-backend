@@ -2,8 +2,9 @@ const Hapi = require('@hapi/hapi')
 const Inert = require('@hapi/inert');
 const Vision = require('@hapi/vision');
 const HapiSwagger = require('hapi-swagger');
-const Joi = require('joi')
+const Joi = require('joi');
 const Routes = require('./routes');
+
 
 const init = async () => {
 
@@ -27,7 +28,7 @@ const init = async () => {
             options: swaggerOptions
         }
     ]);
-    
+
     server.route(Routes);
 
     await server.start();
@@ -36,7 +37,7 @@ const init = async () => {
 
 process.on('unhandledRejection', (err) => {
 
-    console.log(err);
+    console.log('err', err);
     process.exit(1);
 });
 
