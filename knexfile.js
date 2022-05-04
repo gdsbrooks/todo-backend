@@ -8,7 +8,7 @@ module.exports = {
   development: {
     client: 'better-sqlite3',
     connection: {
-      filename: './db/dev.sqlite3'
+      filename: './dev.sqlite3'
     }
   },
 
