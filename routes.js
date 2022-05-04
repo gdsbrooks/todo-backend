@@ -1,5 +1,8 @@
-const { allow } = require('joi');
 const Joi = require('joi')
+const { customAlphabet } = require('nanoid/non-secure')
+
+const nanoid = customAlphabet('1234567890abcdef', 10)
+
 const Routes =
     [
         {
@@ -16,13 +19,14 @@ const Routes =
                             .description('optional filter by status - all [default], complete, incomplete. '),
                         orderBy: Joi.string()
                             .optional()
-                            .only().allow('createdAt', 'completedAt', 'description' )
+                            .only().allow('createdAt', 'completedAt', 'description')
                             .description('optional sort criteria - createdAt [default], completedAt or description.')
                     }),
 
                 },
                 handler: (request, h) => {
 
+                    //default values for filter and orderBy if not specified.
                     const filter = request.query.filter || 'all';
                     const orderBy = request.query.orderBy || 'createdAt';
 
@@ -44,12 +48,35 @@ const Routes =
                             .required()
                             .description('the description of  the new todo item')
                     }),
-
                 },
                 handler: (request, h) => {
-                    const newTodo = request.payload
-                },
+                    const todoDescription = request.payload
+
+                    const newTodo = {
+                        id: nanoid(),
+                        description: todoDescription.description,
+                        createdAt: new Date().toISOString(),
+                        state: false,
+                        completedAt: null
+                    }
+                    return newTodo
+                }
             }
+            // Schema for full response object
+            //  Joi.object({
+            //         id: Joi.string()
+            //             .required()
+            //             .alphanum()
+            //             .length(10),
+            //         description: Joi.string()
+            //             .required(),
+            //         createdAt: Joi.date()
+            //             .required(),
+            //         state: Joi.boolean()
+            //             .required(),
+            //         completedAt: Joi.date()
+            //             .optional()
+            //     })
         },
         {
             method: 'PATCH',
