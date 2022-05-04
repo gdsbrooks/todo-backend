@@ -87,7 +87,8 @@ const Routes =
                 tags: ['api'],
                 validate: {
                     params: Joi.object({
-                        id: Joi.number()
+                        id: Joi.string()
+                            .length(10)
                             .required()
                             .description('the id for the todo item to modify')
                     }),
@@ -99,6 +100,9 @@ const Routes =
                 handler: (request, h) => {
 
                     const patchTodo = request.params.id
+                    const updatedTodo = request.payload
+
+                    return `${patchTodo} - ${updatedTodo.description}`
 
                 }
             }
@@ -112,8 +116,9 @@ const Routes =
                 tags: ['api'],
                 validate: {
                     params: Joi.object({
-                        id: Joi.number()
+                        id: Joi.string()
                             .required()
+                            .length(10)
                             .description('the id for the todo item to delete')
                     }),
                 },
@@ -121,6 +126,7 @@ const Routes =
 
                     const deleteTodo = request.params.id
 
+                    return `${deleteTodo} successfully deleted. BE GONE!`
                 }
             }
         },
