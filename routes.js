@@ -28,12 +28,14 @@ const Routes =
                 },
                 handler: (request, h) => {
 
-                    const filter = request.query.filter || 'all';
+                    const filter = request.query.filter || null;
                     const orderBy = request.query.orderBy || 'createdAt';
 
-                    return database('todos')
+                    
+                        return database('todos')
+                    }
                 }
-            }
+            
         },
         {
             method: 'POST',

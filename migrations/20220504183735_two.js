@@ -6,7 +6,7 @@
     return knex.schema.createTable('todos', table => {
         table.increments('id'); 
         table.string('description'); 
-        table.boolean('state');
+        table.enu('state', ['complete', 'incomplete']).defaultTo('incomplete');
         table.timestamp('createdAt').defaultTo(knex.fn.now());
         table.timestamp('completedAt')
     });
