@@ -1,3 +1,4 @@
+const { any } = require('joi');
 const Joi = require('joi')
 
 const connection = require('./knexfile')[process.env.DB_CONNECTION || 'development'];
@@ -30,13 +31,33 @@ const Routes =
                 handler: (request, h) => {
 
                     const filter = request.query.filter || null;
-                    const orderBy = request.query.orderBy || 'createdAt';
+                    let filterBool = (filter === 'complete')
+                        ? [1]
+                        : (filter === 'incomplete')
+                            ? [0]
+                            : [0, 1]
 
-                    
-                        return database('todos')
-                    }
+                    // const orderMethods = ['createdAt', 'completedAt', 'description']
+                    // const orderBy = request.query.orderBy
+                    // let orderSequence = (orderBy === 'completedAt')
+                    //     ? [orderMethods[1], orderMethods[0], orderMethods[2]]
+                    //     : (orderBy === 'description')
+                    //         ? [orderMethods[2], orderMethods[0], orderMethods[1]]
+                    //         : orderMethods
+
+                    //Could not reliably implement ordering.
+
+
+
+
+
+
+
+                    return database('todos').whereIn('isComplete', filterBool)
+                    // .orderBy(orderSequence) - could not make order work
                 }
-            
+            }
+
         },
         {
             method: 'POST',
@@ -55,26 +76,10 @@ const Routes =
                     }),
                 },
                 handler: (request, h) => {
-                    console.log('posted')
                     return database('todos')
-                    .insert(request.payload, ['todoText'])
+                        .insert(request.payload, ['*']) //Adds todo and returns all rows as a response
                 }
             }
-            // Schema for full response object
-            //  Joi.object({
-            //         id: Joi.string()
-            //             .required()
-            //             .alphanum()
-            //             .length(10),
-            //         description: Joi.string()
-            //             .required(),
-            //         createdAt: Joi.date()
-            //             .required(),
-            //         state: Joi.boolean()
-            //             .required(),
-            //         completedAt: Joi.date()
-            //             .optional()
-            //     })
         },
         {
             method: 'PATCH',
@@ -91,15 +96,15 @@ const Routes =
                             .description('the id for the todo item to modify')
                     }),
                     payload: Joi.object({
-                        isComplete : Joi.boolean(),
+                        isComplete: Joi.boolean(),
                         todoText: Joi.string()
                     })
                 },
                 handler: (request, h) => {
-
+                    const {isComplete, todoText} = request.payload
                     return database('todos')
-                    .where({id: request.params.id})
-                    .update(request.payload)
+                        .where({ id: request.params.id })
+                        .update({isComplete, todoText}, ['*'])
 
                 }
             }
@@ -120,9 +125,9 @@ const Routes =
                     }),
                 },
                 handler: (request, h) => {
-                return database('todos')
-                .where('id', request.params.id)
-                .del()
+                    return database('todos')
+                        .where('id', request.params.id)
+                        .del()
 
                 }
             }
